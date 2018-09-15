@@ -339,6 +339,21 @@ module.exports = function(defaultFuncs, api, ctx) {
                         case "change_thread_nickname":
                         case "change_thread_icon":
                           break;
+                        case "lightweight_event_create":
+                        case "lightweight_event_update_title":
+                        case "lightweight_event_update_time":
+                        case "lightweight_event_notify":
+                        case "lightweight_event_rsvp":
+                        case "lightweight_event_delete":
+                        case "lightweight_event_update_location":
+                          v.delta.untypedData.guest_state_list = JSON.parse(v.delta.untypedData.guest_state_list);
+                          return globalCallback(null, {
+                            type: v.delta.type,
+                            threadID: (v.delta.messageMetadata.threadKey.threadFbId || v.delta.messageMetadata.threadKey.otherUserFbId).toString(),
+                            body: v.delta.messageMetadata.adminText,
+                            messageID: v.delta.messageMetadata.messageId,
+                            event_data: v.delta.untypedData
+                          })
                         default:
                           return;
                       }
