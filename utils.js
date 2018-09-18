@@ -1,7 +1,6 @@
 "use strict";
 
 var bluebird = require("bluebird");
-const delay = delay => new Promise(resolve => setTimeout(resolve, delay))
 var request = bluebird.promisify(require("request").defaults({ jar: true }));
 var stream = require("stream");
 var log = require("npmlog");
@@ -1006,7 +1005,8 @@ function parseAndCheckLogin(ctx, defaultFuncs, retryCount) {
           data.request.uri.hostname +
           data.request.uri.pathname;
         if (data.request.headers["Content-Type"].split(";")[0] === "multipart/form-data") {
-          return delay(retryTime)
+          return bluebird
+            .delay(retryTime)
             .then(() => defaultFuncs.postFormData(
               url,
               ctx.jar,

@@ -22,9 +22,9 @@
   "author": "Avery, David, Maude, Benjamin, Bjornskjald",
   "license": "MIT",
   "dependencies": {
+    "bluebird": "^2.11.0",
     "cheerio": "^1.0.0-rc.2",
     "npmlog": "^4.1.2",
-    "parse5": "^5.1.0",
     "request": "^2.88.0"
   },
   "engines": {
