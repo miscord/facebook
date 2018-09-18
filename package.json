@@ -1,6 +1,6 @@
 {
   "name": "@miscord/facebook",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "description": "facebook-chat-api fork, customized for Miscord",
   "scripts": {
     "test": "npm run lint",
