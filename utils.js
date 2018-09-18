@@ -985,8 +985,7 @@ function parseAndCheckLogin(ctx, defaultFuncs, retryCount) {
   if (retryCount == undefined) {
     retryCount = 0;
   }
-  return function(data) {
-    return bluebird.try(function() {
+  return async function(data) {
       log.verbose("parseAndCheckLogin", data.body);
       if (data.statusCode >= 500 && data.statusCode < 600) {
         if (retryCount >= 5) {
@@ -999,35 +998,21 @@ function parseAndCheckLogin(ctx, defaultFuncs, retryCount) {
         }
         retryCount++;
         var retryTime = Math.floor(Math.random() * 5000);
-        log.warn(
-          "parseAndCheckLogin",
-          "Got status code " +
-            data.statusCode +
-            " - " +
-            retryCount +
-            ". attempt to retry in " +
-            retryTime +
-            " milliseconds..."
-        );
+        log.warn('parseAndCheckLogin', `Got status code ${data.statusCode} - ${retryCount}. Attempting to retry in ${retryTime}ms...`)
         var url =
           data.request.uri.protocol +
           "//" +
           data.request.uri.hostname +
           data.request.uri.pathname;
-        if (
-          data.request.headers["Content-Type"].split(";")[0] ===
-          "multipart/form-data"
-        ) {
+        if (data.request.headers["Content-Type"].split(";")[0] === "multipart/form-data") {
           return bluebird
             .delay(retryTime)
-            .then(function() {
-              return defaultFuncs.postFormData(
-                url,
-                ctx.jar,
-                data.request.formData,
-                {}
-              );
-            })
+            .then(() => defaultFuncs.postFormData(
+              url,
+              ctx.jar,
+              data.request.formData,
+              {}
+            ))
             .then(parseAndCheckLogin(ctx, defaultFuncs, retryCount));
         } else {
           return bluebird
@@ -1038,12 +1023,7 @@ function parseAndCheckLogin(ctx, defaultFuncs, retryCount) {
             .then(parseAndCheckLogin(ctx, defaultFuncs, retryCount));
         }
       }
-      if (data.statusCode !== 200)
-        throw new Error(
-          "parseAndCheckLogin got status code: " +
-            data.statusCode +
-            ". Bailing out of trying to parse response."
-        );
+      if (data.statusCode !== 200) throw new Error(`parseAndCheckLogin got status code: ${data.statusCode}. Bailing out of trying to parse response.`);
 
       var res = null;
       try {
@@ -1101,7 +1081,6 @@ function parseAndCheckLogin(ctx, defaultFuncs, retryCount) {
         throw { error: "Not logged in." };
       }
       return res;
-    });
   };
 }
 

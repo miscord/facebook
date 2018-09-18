@@ -75,54 +75,47 @@ function buildAPI(globalOptions, html, jar) {
     },
   };
 
-  const apiFuncNames = [
-    'addUserToGroup',
-    'changeAdminStatus',
-    'changeArchivedStatus',
-    'changeBlockedStatus',
-    'changeGroupImage',
-    'changeNickname',
-    'changeThreadColor',
-    'changeThreadEmoji',
-    'createPoll',
-    'deleteMessage',
-    'deleteThread',
-    'forwardAttachment',
-    'getCurrentUserID',
-    'getEmojiUrl',
-    'getFriendsList',
-    'getThreadHistory',
-    'getThreadInfo',
-    'getThreadList',
-    'getThreadPictures',
-    'getUserID',
-    'getUserInfo',
-    'handleMessageRequest',
-    'listen',
-    'logout',
-    'markAsRead',
-    'muteThread',
-    'removeUserFromGroup',
-    'resolvePhotoUrl',
-    'searchForThread',
-    'sendMessage',
-    'sendTypingIndicator',
-    'setMessageReaction',
-    'setTitle',
-    'threadColors',
-
-    // Deprecated features
-    "getThreadListDeprecated",
-    'getThreadHistoryDeprecated',
-    'getThreadInfoDeprecated',
-  ];
+  const apiFuncs = {
+    addUserToGroup: require('./src/addUserToGroup'),
+    changeAdminStatus: require('./src/changeAdminStatus'),
+    changeArchivedStatus: require('./src/changeArchivedStatus'),
+    changeBlockedStatus: require('./src/changeBlockedStatus'),
+    changeGroupImage: require('./src/changeGroupImage'),
+    changeNickname: require('./src/changeNickname'),
+    changeThreadColor: require('./src/changeThreadColor'),
+    changeThreadEmoji: require('./src/changeThreadEmoji'),
+    createPoll: require('./src/createPoll'),
+    deleteMessage: require('./src/deleteMessage'),
+    deleteThread: require('./src/deleteThread'),
+    forwardAttachment: require('./src/forwardAttachment'),
+    getCurrentUserID: require('./src/getCurrentUserID'),
+    getEmojiUrl: require('./src/getEmojiUrl'),
+    getFriendsList: require('./src/getFriendsList'),
+    getThreadHistory: require('./src/getThreadHistory'),
+    getThreadInfo: require('./src/getThreadInfo'),
+    getThreadList: require('./src/getThreadList'),
+    getThreadPictures: require('./src/getThreadPictures'),
+    getUserID: require('./src/getUserID'),
+    getUserInfo: require('./src/getUserInfo'),
+    handleMessageRequest: require('./src/handleMessageRequest'),
+    listen: require('./src/listen'),
+    logout: require('./src/logout'),
+    markAsRead: require('./src/markAsRead'),
+    muteThread: require('./src/muteThread'),
+    removeUserFromGroup: require('./src/removeUserFromGroup'),
+    resolvePhotoUrl: require('./src/resolvePhotoUrl'),
+    searchForThread: require('./src/searchForThread'),
+    sendMessage: require('./src/sendMessage'),
+    sendTypingIndicator: require('./src/sendTypingIndicator'),
+    setMessageReaction: require('./src/setMessageReaction'),
+    setTitle: require('./src/setTitle'),
+    threadColors: require('./src/threadColors')
+  }
 
   var defaultFuncs = utils.makeDefaults(html, userID, ctx);
 
   // Load all api functions in a loop
-  apiFuncNames.map(function(v) {
-    api[v] = require('./src/' + v)(defaultFuncs, api, ctx);
-  });
+  Object.keys(apiFuncs).map(func => { api[func] = apiFuncs[func](defaultFuncs, api, ctx) });
 
   return [ctx, defaultFuncs, api];
 }
